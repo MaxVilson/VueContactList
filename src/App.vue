@@ -1,32 +1,59 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div
+    id="app"
+    class="content"
+    @click.self="closeModal"
+    :class="{overlay: isShowModal}"
+  >
+    <app-header />
+    <router-view />
+    <app-modal />
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import 'normalize.css';
+import '@/assets/global.scss';
+import {mapState} from 'vuex';
+import AppModal from '@/components/modals/Modal.vue';
+import AppHeader from '@/components/Header.vue';
+
+export default {
+  components: {
+    AppHeader,
+    AppModal
+  },
+
+  methods: {
+    closeModal() {
+      if (this.isShowModal) {
+        this.$store.commit('closeModal');
+      }
+    }
+  },
+
+  computed: {
+    ...mapState(['isShowModal'])
+  }
+};
+</script>
+
+.<style lang="scss">
+.content {
+  position: relative;
+  flex: 1 0 auto;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+.overlay {
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 }
 </style>
