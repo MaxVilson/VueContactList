@@ -20,10 +20,10 @@
               :id="key"
               class="form-control"
               type="text"
-              :placeholder="value"
-              v-model="contact[key]"
+              v-model="contact[key].value"
+              @change="editContact(key, contact[key].value)"
             />
-            <i class="contact__clear" @click="clearField(key)">X</i>
+            <i class="contact__clear" @click="clearField(key)">x</i>
           </div>
           <button class="btn" @click="showModal('AppAddNewField')">Add new field</button>
           <button
@@ -32,9 +32,6 @@
             @click="deleteLastAction({id: +$route.params.id})"
           >
             Undo the last step
-          </button>
-          <button class="btn btn_red" style="margin-left: 10px" @click="editContact(contact)">
-            Save
           </button>
         </div>
       </div>
@@ -48,7 +45,6 @@ import {mapGetters, mapMutations} from 'vuex';
 export default {
   methods: {
     ...mapMutations({
-      editContact: 'contacts/editContact',
       showModal: 'showModal',
       deleteField: 'contacts/deleteField',
       deleteLastAction: 'contacts/deleteLastAction'
@@ -58,6 +54,17 @@ export default {
       if (confirm('Are you sure you want to clear field?')) {
         this.contact[key] = '';
       }
+    },
+
+    editContact(key, value) {
+      this.$store.commit('contacts/editContact', {
+        key: key,
+        data: {
+          value: value,
+          actionsHistory: [{[key]: value}]
+        },
+        id: +this.$route.params.id
+      });
     }
   },
 

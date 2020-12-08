@@ -31,7 +31,14 @@ export default {
     setNewField() {
       this.$store.commit('contacts/setNewField', {
         key: this.key,
-        value: this.value,
+        data: {
+          value: this.value,
+          actionsHistory: [
+            {
+              [this.key]: this.value
+            }
+          ]
+        },
         id: +this.$route.params.id
       });
     }

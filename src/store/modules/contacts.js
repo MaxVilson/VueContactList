@@ -37,15 +37,28 @@ export default {
 
     setNewField(state, payload) {
       const index = state.contacts.findIndex(contact => contact.id === payload.id);
-      Vue.set(state.contacts[index], payload.key, payload.value);
-      editInnerItem('contacts', index, {key: payload.key, value: payload.value});
+      Vue.set(state.contacts[index], payload.key, payload.data);
+      editInnerItem('contacts', index, {key: payload.key, value: payload.data});
+    },
+
+    editContact(state, payload) {
+      const index = state.contacts.findIndex(contact => contact.id === payload.id);
+      // eslint-disable-next-line no-prototype-builtins
+      if (state.contacts[index][payload.key].hasOwnProperty('actionsHistory')) {
+        console.log(payload.data.actionsHistory[0]);
+        state.contacts[index][payload.key].actionsHistory.push(payload.data.actionsHistory[0]);
+      } else {
+        state.contacts[index][payload.key].actionsHistory = [];
+      }
+      Vue.set(state.contacts[index], payload.key, payload.data);
+      editItem('contacts', index, {key: payload.key, value: payload.data});
     },
 
     deleteLastAction(state, payload) {
       const index = state.contacts.findIndex(contact => contact.id === payload.id);
-      const newState = Object.entries(state.contacts[index]).splice(-1, 1);
+      // const newState = Object.entries(state.contacts[index]).splice(-1, 1);
       // Vue.set(state.contacts[index], payload.key, payload.value);
-      console.log(newState);
+      console.log(state.contacts[index]);
     },
 
     deleteField(state, payload) {
@@ -54,12 +67,6 @@ export default {
         Vue.delete(state.contacts[index], payload.key);
         deleteInnerItem('contacts', index, {key: payload.key});
       }
-    },
-
-    editContact(state, payload) {
-      const index = state.contacts.findIndex(contact => contact.id === payload.id);
-      state.contacts[index] = payload;
-      editItem('contacts', index, payload);
     },
 
     deleteContact(state, id) {

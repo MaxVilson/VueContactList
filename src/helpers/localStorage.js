@@ -17,10 +17,10 @@ export const setItem = (name, key) => {
   }
 };
 
-export const editItem = (name, key, value) => {
+export const editItem = (name, key, data) => {
   try {
     const arr = JSON.parse(localStorage.getItem(name));
-    arr[key] = value;
+    arr[key][data.key] = data.value;
     localStorage.setItem(name, JSON.stringify(arr));
   } catch (e) {
     console.log('Error edit data in localStorage', e);

@@ -2,9 +2,9 @@
   <section class="contacts-list">
     <article class="contacts-list__item" v-for="contact in contacts" :key="contact.id">
       <ul class="contacts-list__item-list">
-        <li><b>Name:</b> {{ contact.name }}</li>
-        <li><b>Email:</b> {{ contact.email }}</li>
-        <li><b>Phone:</b> {{ contact.phone }}</li>
+        <li><b>Name:</b> {{ contact.name.value }}</li>
+        <li><b>Email:</b> {{ contact.email.value }}</li>
+        <li><b>Phone:</b> {{ contact.phone.value }}</li>
       </ul>
       <div class="contacts-list__item-btns">
         <router-link

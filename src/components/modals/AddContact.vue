@@ -35,9 +35,15 @@ export default {
 
     setContact() {
       this.$store.commit('contacts/setContact', {
-        name: this.name,
-        email: this.email,
-        phone: this.phone
+        name: {
+          value: this.name
+        },
+        email: {
+          value: this.email
+        },
+        phone: {
+          value: this.phone
+        }
       });
     }
   }
