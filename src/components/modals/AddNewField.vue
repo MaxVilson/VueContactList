@@ -39,7 +39,7 @@ export default {
             }
           ]
         },
-        id: +this.$route.params.id
+        id: this.$route.params.id
       });
     }
   }

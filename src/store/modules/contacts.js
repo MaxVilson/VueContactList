@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import {v4 as uuidv4} from 'uuid';
 import {
   setItem,
   getItem,
@@ -7,9 +8,6 @@ import {
   deleteInnerItem,
   deleteItem
 } from '@/helpers/localStorage.js';
-
-// eslint-disable-next-line no-unused-vars
-let id = 0;
 
 export default {
   namespaced: true,
@@ -25,8 +23,7 @@ export default {
 
   mutations: {
     setContact(state, payload) {
-      id++;
-      payload.id = id;
+      payload.id = uuidv4();
       state.contacts.push(payload);
       setItem('contacts', state.contacts);
     },
@@ -45,21 +42,22 @@ export default {
       const index = state.contacts.findIndex(contact => contact.id === payload.id);
       // eslint-disable-next-line no-prototype-builtins
       if (state.contacts[index][payload.key].hasOwnProperty('actionsHistory')) {
-        console.log(payload.data.actionsHistory[0]);
         state.contacts[index][payload.key].actionsHistory.push(payload.data.actionsHistory[0]);
       } else {
         state.contacts[index][payload.key].actionsHistory = [];
+        state.contacts[index][payload.key].actionsHistory.push(payload.data.actionsHistory[0]);
       }
-      Vue.set(state.contacts[index], payload.key, payload.data);
-      editItem('contacts', index, {key: payload.key, value: payload.data});
+      Vue.set(state.contacts[index], payload.key.val, payload.data.value);
+      console.log(state.contacts[index]);
+      console.log(payload.key.value);
+      editItem('contacts', index, {key: payload.key, value: payload.data.value});
     },
 
-    deleteLastAction(state, payload) {
-      const index = state.contacts.findIndex(contact => contact.id === payload.id);
-      // const newState = Object.entries(state.contacts[index]).splice(-1, 1);
-      // Vue.set(state.contacts[index], payload.key, payload.value);
-      console.log(state.contacts[index]);
-    },
+    // deleteLastAction(state, payload) {
+    //   // const index = state.contacts.findIndex(contact => contact.id === payload.id);
+    //   // const newState = Object.entries(state.contacts[index]).splice(-1, 1);
+    //   // Vue.set(state.contacts[index], payload.key, payload.value);
+    // },
 
     deleteField(state, payload) {
       if (confirm('Are you sure you want to delete the field?')) {

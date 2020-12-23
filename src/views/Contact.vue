@@ -1,8 +1,8 @@
 <template>
-  <section class="contact" v-if="hasContact">
+  <section class="contact">
     <div class="container">
       <router-link class="contact__link" :to="{name: 'home'}">Back to home page</router-link>
-      <div class="contact__wrapper">
+      <div class="contact__wrapper" v-if="contact">
         <div class="form contact__form">
           <div
             class="form-group contact__group"
@@ -20,19 +20,19 @@
               :id="key"
               class="form-control"
               type="text"
-              v-model="contact[key].value"
+              v-model.lazy="contact[key].value"
               @change="editContact(key, contact[key].value)"
             />
             <i class="contact__clear" @click="clearField(key)">x</i>
           </div>
           <button class="btn" @click="showModal('AppAddNewField')">Add new field</button>
-          <button
+          <!-- <button
             class="btn btn_blue"
             style="margin-left: 10px"
-            @click="deleteLastAction({id: +$route.params.id})"
+            @click="deleteLastAction({id: $route.params.id})"
           >
             Undo the last step
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -61,9 +61,9 @@ export default {
         key: key,
         data: {
           value: value,
-          actionsHistory: [{[key]: value}]
+          actionsHistory: [{value: value}]
         },
-        id: +this.$route.params.id
+        id: this.$route.params.id
       });
     }
   },
@@ -72,7 +72,8 @@ export default {
     ...mapGetters('contacts', ['getContact']),
 
     contact() {
-      return this.getContact(+this.$route.params.id);
+      let contact = this.getContact(this.$route.params.id);
+      return contact;
     },
 
     hasContact() {
